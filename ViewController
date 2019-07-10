@@ -1,26 +1,32 @@
-override func viewDidLoad() {
-    super.viewDidLoad()
+import UIKit
+import ArcGIS
 
-    let path = Bundle.main.path(forResource: "testPortland", ofType: "tpk")!
-    let localTiledLayer = AGSArcGISTiledLayer(tileCache: AGSTileCache(fileURL: URL(fileURLWithPath: path)))
+class ViewController: UIViewController, AGSGEOViewTouchDelegate {
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
 
-    self.map = AGSMap(basemap: AGSBasemap(baseLayer: localTiledLayer))
+        let path = Bundle.main.path(forResource: "testPortland", ofType: "tpk")!
+        let localTiledLayer = AGSArcGISTiledLayer(tileCache: AGSTileCache(fileURL: URL(fileURLWithPath: path)))
 
-    self.mapView.map = self.map
+        self.map = AGSMap(basemap: AGSBasemap(baseLayer: localTiledLayer))
 
-    self.mapView.touchDelegate = self
+        self.mapView.map = self.map
 
-    self.mapView.graphicsOverlays.addObjects(from: [self.routeGraphicsOverlay, self.stopGraphicsOverlay])
+        self.mapView.touchDelegate = self
 
-    //database Path
-    let dbPath = Bundle.main.path(forResource: "TestPortlandPedestrians", ofType: "geodatabase")!
+        self.mapView.graphicsOverlays.addObjects(from: [self.routeGraphicsOverlay, self.stopGraphicsOverlay])
 
-    //initialize routing
-    self.routeTask = AGSRouteTask(fileURLToDatabase: URL(fileURLWithPath: dbPath), networkName: "walkways")
+        //database Path
+        let dbPath = Bundle.main.path(forResource: "TestPortlandPedestrians", ofType: "geodatabase")!
 
-    //get default route parameters
-    self.getDefaultParameters()
+        //initialize routing
+        self.routeTask = AGSRouteTask(fileURLToDatabase: URL(fileURLWithPath: dbPath), networkName: "walkways")
 
-    //enable magnifier
-    self.mapView.interactionOptions.isMagnifierEnabled = true
+        //get default route parameters
+        self.getDefaultParameters()
+
+        //enable magnifier
+        self.mapView.interactionOptions.isMagnifierEnabled = true
+    }
 }

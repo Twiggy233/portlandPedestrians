@@ -1,0 +1,26 @@
+override func viewDidLoad() {
+    super.viewDidLoad()
+
+    let path = Bundle.main.path(forResource: "testPortland", ofType: "tpk")!
+    let localTiledLayer = AGSArcGISTiledLayer(tileCache: AGSTileCache(fileURL: URL(fileURLWithPath: path)))
+
+    self.map = AGSMap(basemap: AGSBasemap(baseLayer: localTiledLayer))
+
+    self.mapView.map = self.map
+
+    self.mapView.touchDelegate = self
+
+    self.mapView.graphicsOverlays.addObjects(from: [self.routeGraphicsOverlay, self.stopGraphicsOverlay])
+
+    //database Path
+    let dbPath = Bundle.main.path(forResource: "TestPortlandPedestrians", ofType: "geodatabase")!
+
+    //initialize routing
+    self.routeTask = AGSRouteTask(fileURLToDatabase: URL(fileURLWithPath: dbPath), networkName: "walkways")
+
+    //get default route parameters
+    self.getDefaultParameters()
+
+    //enable magnifier
+    self.mapView.interactionOptions.isMagnifierEnabled = true
+}
